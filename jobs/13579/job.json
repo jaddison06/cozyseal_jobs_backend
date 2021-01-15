@@ -1,0 +1,59 @@
+{
+  "address": "xxxxxxxxxxxxxxxxxxxxx",
+  "complete": true,
+  "id": 13579,
+  "resident": "James Addison",
+  "survey": [
+    {
+      "hint": "amount of windows",
+      "result": {
+        "value": 6
+      },
+      "type": "integer"
+    },
+    {
+      "hint": "door width",
+      "result": {
+        "value": 900.0
+      },
+      "type": "decimal"
+    },
+    {
+      "hint": "door height",
+      "result": {
+        "value": 2100.0
+      },
+      "type": "decimal"
+    },
+    {
+      "choices": [
+        "door_1.png",
+        "door_2.png",
+        "door_3.jpg"
+      ],
+      "hint": "door type",
+      "result": {
+        "value": "door_1.png"
+      },
+      "type": "imageChoice"
+    },
+    {
+      "choices": [
+        "left",
+        "right"
+      ],
+      "hint": "door hinging",
+      "result": {
+        "value": "left"
+      },
+      "type": "dropdown"
+    },
+    {
+      "hint": "variations",
+      "result": {
+        "value": "blue"
+      },
+      "type": "text"
+    }
+  ]
+}

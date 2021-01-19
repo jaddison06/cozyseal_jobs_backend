@@ -1,6 +1,6 @@
 import flask as f
 from flask import request, jsonify, send_file
-import json
+import yaml
 import os.path as path
 import os
 
@@ -19,7 +19,7 @@ def getJobFolder(jobID):
     return f'./jobs/{jobID}'
 
 def getJobFile(jobID):
-    return f'{getJobFolder(jobID)}/job.json'
+    return f'{getJobFolder(jobID)}/job.yaml'
 
 def jobFileExists(jobID):
     return path.exists(getJobFile(jobID))
@@ -27,12 +27,12 @@ def jobFileExists(jobID):
 def getJob(jobID):
     if not jobFileExists(jobID): return {}
     with open(getJobFile(jobID), 'rt') as fh:
-        return json.loads(fh.read())
+        return yaml.safe_load(fh)
 
 def writeJob(jobID, data):
     if not jobFileExists(jobID): return
     with open(getJobFile(jobID), 'wt') as fh:
-        fh.write(json.dumps(data, indent=2))
+        yaml.dump(data, fh, default_flow_style=False)
 
 def checkArgs(requestArgs, argsToCheck = {'jobID': int}):
     out = []
@@ -59,6 +59,21 @@ def getAssets(jobID):
     
     return out
 
+# ENDPOINTS
+#
+# +---------------------+--------+-----------------------------+-----------------------------+
+# | Endpoint            | Method | Parameters                  | Returns                     |
+# +---------------------+--------+-----------------------------+-----------------------------+
+# | /jobs/              | GET    | int jobID                   | Job metadata                |
+# +---------------------+--------+-----------------------------+-----------------------------+
+# | /jobs/checkout      | GET    | int jobID                   | Job data                    |
+# +---------------------+--------+-----------------------------+-----------------------------+
+# | /jobs/retrieveAsset | GET    | int jobID, string assetName | Image from the job's assets |
+# +---------------------+--------+-----------------------------+-----------------------------+
+# | /jobs/return        | POST   | int jobID, request's json   | Nothing                     |
+# +---------------------+--------+-----------------------------+-----------------------------+
+
+
 @app.route(f'{BASE_ROUTE}/checkout', methods=['GET'])
 def checkoutJob():
 
@@ -67,6 +82,9 @@ def checkoutJob():
     id = id[0]
     
     job = getJob(id)
+
+    # avoid hard duplication - we've already got it in the folder name
+    job['id'] = id
 
     return jsonify(job)
 
